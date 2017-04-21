@@ -7,7 +7,8 @@ var checkTime = ['12:00', '13.00', '14.00'];
 var dialogPanelTemplate = document.getElementById('lodge-template').content;
 var originalDialogPanel = body.querySelector('.dialog__panel');
 var offerDialog = originalDialogPanel.parentNode;
-var avatar = offerDialog.querySelector('dialog__title img');
+var dialogTitle = body.querySelector('.dialog__title');
+var avatarImg = dialogTitle.querySelector('img');
 var random = function(min,max) {
     return Math.round(Math.random()*(max-min) + (min))
 };
@@ -84,7 +85,7 @@ var renderDialogPanel = function() {
 var dialogPanelTemplateGen = document.createDocumentFragment();
 dialogPanelTemplateGen.appendChild(renderDialogPanel());
 offerDialog.replaceChild(dialogPanelTemplateGen,originalDialogPanel);
-//avatar.src = adverts[0].author.avatar; - null?
+avatarImg.src = adverts[0].author.avatar; 
 
 
 
