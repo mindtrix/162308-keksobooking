@@ -32,7 +32,11 @@ var genElement = function(n) {
       'title': titles[random(0,titles.length-1)], 
       'address': x + ',' + y,
       'price': random(1000,1000000), 
-      'type': typeOfHouse[random(0,typeOfHouse.length-1)],
+      'type': {
+          'flat':"Квартира", 
+          'house':'Дом',
+          'bungalo':'Бунгало'
+        },
       'rooms': random(1,5),
       'guests': random(1,10),
       'checkin': checkTime[random(0,checkTime.length-1)],
@@ -75,7 +79,7 @@ var renderDialogPanel = function() {
   dialogPanelTemplateCopy.querySelector('.lodge__title').textContent = adverts[0].offer.title;
   dialogPanelTemplateCopy.querySelector('.lodge__address').textContent = adverts[0].offer.address;
   dialogPanelTemplateCopy.querySelector('.lodge__price').textContent = adverts[0].offer.price + '/ночь';
-  dialogPanelTemplateCopy.querySelector('.lodge__type').textContent = adverts[0].offer.type;
+  dialogPanelTemplateCopy.querySelector('.lodge__type').textContent = adverts[0].offer.type[typeOfHouse[random(0,typeOfHouse.length-1)]];
   dialogPanelTemplateCopy.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + adverts[0].offer.guests + ' гостей в ' + adverts[0].offer.rooms + ' комнатах';
   dialogPanelTemplateCopy.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + adverts[0].offer.checkin + ', выезд до ' + adverts[0].offer.checkout;
   dialogPanelTemplateCopy.querySelector('.lodge__features').appendChild(featuresList);
