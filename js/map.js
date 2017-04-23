@@ -16,8 +16,8 @@ var adverts = [];
 var genElement = function (n) {
   var x = random(300, 900);
   var y = random(100, 500);
-  var randomFeaturesLength = function() {
-    var featuresArrcopy = featuresArr.slice ();
+  var randomFeaturesLength = function () {
+    var featuresArrcopy = featuresArr.slice();
     var counter = random(0, featuresArrcopy.length);
     for (; counter > 0; counter--) {
       featuresArrcopy.splice(random(0, featuresArrcopy.length - 1), 1);
@@ -33,7 +33,7 @@ var genElement = function (n) {
       'address': x + ',' + y,
       'price': random(1000, 1000000),
       'type': {
-        'flat': 'Квартира', 
+        'flat': 'Квартира',
         'house': 'Дом',
         'bungalo': 'Бунгало'
       },
@@ -59,13 +59,13 @@ var map = document.body.querySelector('.tokyo__pin-map');
 var renderPin = function (advert) {
   var pinTemplate = map.querySelector('.pin').cloneNode(true);
   pinTemplate.classList.remove('pin__main');
-  pinTemplate.style = 'left:' + (advert.location.x - 20) + 'px; top:' + (advert.location.y - 20) +'px';
+  pinTemplate.style = 'left:' + (advert.location.x - 20) + 'px; top:' + (advert.location.y - 20) + 'px';
   pinTemplate.querySelector('img').src = advert.author.avatar;
   return pinTemplate;
-}
+};
 var renderedAllPins = document.createDocumentFragment();
-for (var i = 0; i < adverts.length; i++) {
-  renderedAllPins.appendChild(renderPin(adverts[i]));
+for (var a = 0; a < adverts.length; a++) {
+  renderedAllPins.appendChild(renderPin(adverts[a]));
 }
 map.appendChild(renderedAllPins);
 var renderDialogPanel = function () {
