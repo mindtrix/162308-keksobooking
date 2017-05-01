@@ -4,7 +4,6 @@ var titles = ['Большая уютная квартира', 'Маленька�
 var typeOfHouse = ['flat', 'house', 'bungalo'];
 var featuresArr = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var checkTime = ['12:00', '13.00', '14.00'];
-var map = document.body.querySelector('.tokyo__pin-map');
 var dialogPanelTemplate = document.getElementById('lodge-template').content;
 var originalDialogPanel = body.querySelector('.dialog__panel');
 var offerDialog = originalDialogPanel.parentNode;
@@ -13,7 +12,6 @@ var avatarImg = dialogTitle.querySelector('img');
 var random = function (min, max) {
   return Math.round(Math.random() * (max - min) + (min));
 };
-
 var adverts = [];
 var genElement = function (n) {
   var x = random(300, 900);
@@ -57,64 +55,38 @@ var genElement = function (n) {
 for (var i = 1; i < 9; i++) {
   adverts.push(genElement(i));
 }
+var map = document.body.querySelector('.tokyo__pin-map');
 var renderPin = function (advert) {
   var pinTemplate = map.querySelector('.pin').cloneNode(true);
   pinTemplate.classList.remove('pin__main');
   pinTemplate.style = 'left:' + (advert.location.x - 20) + 'px; top:' + (advert.location.y - 20) + 'px';
   pinTemplate.querySelector('img').src = advert.author.avatar;
-  return pinTemplate; 
+  return pinTemplate;
 };
-var createPinsFragment = function() {
-  var renderedAllPins = document.createDocumentFragment();
-  for (var a = 0; a < adverts.length; a++) {
-    renderedAllPins.appendChild(renderPin(adverts[a]));
-  }
-  return renderedAllPins;
-};
-map.appendChild(createPinsFragment());
-var renderDialogPanel = function (advertElem) {
+var renderedAllPins = document.createDocumentFragment();
+for (var a = 0; a < adverts.length; a++) {
+  renderedAllPins.appendChild(renderPin(adverts[a]));
+}
+map.appendChild(renderedAllPins);
+var renderDialogPanel = function () {
   var featuresList = document.createDocumentFragment();
-  for (var s = 0; s < advertElem.offer.features.length - 1; s++) {
+  for (var s = 0; s < adverts[0].offer.features.length - 1; s++) {
     var featureSpan = document.createElement('span');
-    featureSpan.className = 'feature__image + feature__image--' + advertElem.offer.features[s];
+    featureSpan.className = 'feature__image + feature__image--' + adverts[0].offer.features[s];
     featuresList.appendChild(featureSpan);
   }
-  avatarImg.src = advertElem.author.avatar;
   var dialogPanelTemplateCopy = dialogPanelTemplate.cloneNode(true);
-  dialogPanelTemplateCopy.querySelector('.lodge__title').textContent = advertElem.offer.title;
-  dialogPanelTemplateCopy.querySelector('.lodge__address').textContent = advertElem.offer.address;
-  dialogPanelTemplateCopy.querySelector('.lodge__price').textContent = advertElem.offer.price + '/ночь';
-  dialogPanelTemplateCopy.querySelector('.lodge__type').textContent = advertElem.offer.type[typeOfHouse[random(0, typeOfHouse.length - 1)]];
-  dialogPanelTemplateCopy.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + advertElem.offer.guests + ' гостей в ' + advertElem.offer.rooms + ' комнатах';
-  dialogPanelTemplateCopy.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advertElem.offer.checkin + ', выезд до ' + advertElem.offer.checkout;
+  dialogPanelTemplateCopy.querySelector('.lodge__title').textContent = adverts[0].offer.title;
+  dialogPanelTemplateCopy.querySelector('.lodge__address').textContent = adverts[0].offer.address;
+  dialogPanelTemplateCopy.querySelector('.lodge__price').textContent = adverts[0].offer.price + '/ночь';
+  dialogPanelTemplateCopy.querySelector('.lodge__type').textContent = adverts[0].offer.type[typeOfHouse[random(0, typeOfHouse.length - 1)]];
+  dialogPanelTemplateCopy.querySelector('.lodge__rooms-and-guests').textContent = 'Для ' + adverts[0].offer.guests + ' гостей в ' + adverts[0].offer.rooms + ' комнатах';
+  dialogPanelTemplateCopy.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + adverts[0].offer.checkin + ', выезд до ' + adverts[0].offer.checkout;
   dialogPanelTemplateCopy.querySelector('.lodge__features').appendChild(featuresList);
-  dialogPanelTemplateCopy.querySelector('.lodge__description').textContent = advertElem.offer.description;
+  dialogPanelTemplateCopy.querySelector('.lodge__description').textContent = adverts[0].offer.description;
   return dialogPanelTemplateCopy;
 };
 var dialogPanelTemplateGen = document.createDocumentFragment();
-var allPins = map.querySelectorAll('.pin');
-var pin = map.querySelector('.pin')
-var onPinClick = function() {
-  for(i = 1; i < allPins.length; i++) {
-    allPins[i].classList.remove('pin--active');
-    this.classList.add('pin--active');
-    offerDialog.style.display ='block'; 
-  } 
-    dialogPanelTemplateGen.appendChild(renderDialogPanel(adverts[0]));// аргумент должен соответствоать кликнутому .pin  
-    offerDialog.replaceChild(dialogPanelTemplateGen, originalDialogPanel); //Второй раз не срабатывает
-};
-var onEnterPress = function(evt) {
-  if(evt.keyCode == 13) {
-    onPinClick();
-  }
-};
-for (i = 1; i < allPins.length; i++) {
-    allPins[i].addEventListener('click', onPinClick)
-}
-for (i = 1; i < allPins.length; i++) {
-  allPins[i].addEventListener('keydown', onEnterPress);//classList Undifined at onPinClick
-}
-var dialogClose = dialogTitle.querySelector('.dialog__close');
-dialogClose.addEventListener('click', function() {
- offerDialog.style.display ='none';
-});
+dialogPanelTemplateGen.appendChild(renderDialogPanel());
+offerDialog.replaceChild(dialogPanelTemplateGen, originalDialogPanel);
+avatarImg.src = adverts[0].author.avatar;
