@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var body = document.body;
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var typeOfHouse = ['flat', 'house', 'bungalo'];
@@ -105,7 +105,7 @@ var deactivatePin = function () {
 };
 
 var onPinClick = function (evt) {
-  var originalDialogPanel = body.querySelector('.dialog__panel');// Search update Node for replaceChild() on 118 15.
+  originalDialogPanel = body.querySelector('.dialog__panel');// Search update Node for replaceChild() on 118 15.
   deactivatePin();
   openDialogPanel();
   evt.currentTarget.classList.add('pin--active');
