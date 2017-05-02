@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 var body = document.body;
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var typeOfHouse = ['flat', 'house', 'bungalo'];
@@ -13,6 +13,7 @@ var avatarImg = dialogTitle.querySelector('img');
 var random = function (min, max) {
   return Math.round(Math.random() * (max - min) + (min));
 };
+
 
 var adverts = [];
 var genElement = function (n) {
@@ -56,7 +57,9 @@ var genElement = function (n) {
 };
 for (var i = 1; i < 9; i++) {
   adverts.push(genElement(i));
-}
+};
+
+
 var renderPin = function (advert) {
   var pinTemplate = map.querySelector('.pin').cloneNode(true);
   pinTemplate.classList.remove('pin__main');
@@ -72,6 +75,8 @@ var createPinsFragment = function() {
   return renderedAllPins;
 };
 map.appendChild(createPinsFragment());
+
+
 var renderDialogPanel = function (advertElem) {
   var featuresList = document.createDocumentFragment();
   for (var s = 0; s < advertElem.offer.features.length - 1; s++) {
@@ -79,7 +84,6 @@ var renderDialogPanel = function (advertElem) {
     featureSpan.className = 'feature__image + feature__image--' + advertElem.offer.features[s];
     featuresList.appendChild(featureSpan);
   }
-  avatarImg.src = advertElem.author.avatar;
   var dialogPanelTemplateCopy = dialogPanelTemplate.cloneNode(true);
   dialogPanelTemplateCopy.querySelector('.lodge__title').textContent = advertElem.offer.title;
   dialogPanelTemplateCopy.querySelector('.lodge__address').textContent = advertElem.offer.address;
@@ -89,32 +93,57 @@ var renderDialogPanel = function (advertElem) {
   dialogPanelTemplateCopy.querySelector('.lodge__checkin-time').textContent = 'Заезд после ' + advertElem.offer.checkin + ', выезд до ' + advertElem.offer.checkout;
   dialogPanelTemplateCopy.querySelector('.lodge__features').appendChild(featuresList);
   dialogPanelTemplateCopy.querySelector('.lodge__description').textContent = advertElem.offer.description;
+  avatarImg.src = advertElem.author.avatar;
   return dialogPanelTemplateCopy;
 };
 var dialogPanelTemplateGen = document.createDocumentFragment();
 var allPins = map.querySelectorAll('.pin');
-var pin = map.querySelector('.pin')
-var onPinClick = function() {
-  for(i = 1; i < allPins.length; i++) {
+var deactivatePin = function() {
+  for(i = 0; i < allPins.length; i++) {
     allPins[i].classList.remove('pin--active');
-    this.classList.add('pin--active');
-    offerDialog.style.display ='block'; 
   } 
-    dialogPanelTemplateGen.appendChild(renderDialogPanel(adverts[0]));// аргумент должен соответствоать кликнутому .pin  
-    offerDialog.replaceChild(dialogPanelTemplateGen, originalDialogPanel); //Второй раз не срабатывает
+};
+
+var onPinClick = function(evt) {
+  var originalDialogPanel =  body.querySelector('.dialog__panel');//Search update Node for replaceChild() on 118 15. 
+  deactivatePin();
+  openDialogPanel();
+  evt.currentTarget.classList.add('pin--active'); 
+  for (i = 0; i < allPins.length; i++) {
+    if(evt.currentTarget === allPins[i]) {
+      var activePin = i - 1;
+    }
+  }; 
+  dialogPanelTemplateGen.appendChild(renderDialogPanel(adverts[activePin])); 
+  offerDialog.replaceChild(dialogPanelTemplateGen, originalDialogPanel); 
+};
+
+var onEscPress = function(evt) {
+  if(evt.keyCode == 27) {
+    closeDialogPanel();
+  }
 };
 var onEnterPress = function(evt) {
   if(evt.keyCode == 13) {
-    onPinClick();
+    onPinClick(evt);
   }
 };
-for (i = 1; i < allPins.length; i++) {
-    allPins[i].addEventListener('click', onPinClick)
-}
-for (i = 1; i < allPins.length; i++) {
-  allPins[i].addEventListener('keydown', onEnterPress);//classList Undifined at onPinClick
-}
+var closeDialogPanel = function(evt) {
+  offerDialog.style.display ='none';
+  deactivatePin();
+  document.removeEventListener('keydown',onEscPress);
+};
+var openDialogPanel = function(evt) {
+  offerDialog.style.display ='block'; 
+  document.addEventListener('keydown',onEscPress);
+};
 var dialogClose = dialogTitle.querySelector('.dialog__close');
-dialogClose.addEventListener('click', function() {
-offerDialog.style.display ='none';
-});
+dialogClose.addEventListener('click', closeDialogPanel);
+for (i = 1; i < allPins.length; i++) {
+  allPins[i].addEventListener('click', onPinClick)
+};
+for (i = 1; i < allPins.length; i++) {
+  allPins[i].addEventListener('keydown', onEnterPress)
+};
+
+
