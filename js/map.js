@@ -57,7 +57,7 @@ var genElement = function (n) {
 };
 for (var i = 1; i < 9; i++) {
   adverts.push(genElement(i));
-};
+}
 
 
 var renderPin = function (advert) {
@@ -65,9 +65,9 @@ var renderPin = function (advert) {
   pinTemplate.classList.remove('pin__main');
   pinTemplate.style = 'left:' + (advert.location.x - 20) + 'px; top:' + (advert.location.y - 20) + 'px';
   pinTemplate.querySelector('img').src = advert.author.avatar;
-  return pinTemplate; 
+  return pinTemplate;
 };
-var createPinsFragment = function() {
+var createPinsFragment = function () {
   var renderedAllPins = document.createDocumentFragment();
   for (var a = 0; a < adverts.length; a++) {
     renderedAllPins.appendChild(renderPin(adverts[a]));
@@ -98,52 +98,52 @@ var renderDialogPanel = function (advertElem) {
 };
 var dialogPanelTemplateGen = document.createDocumentFragment();
 var allPins = map.querySelectorAll('.pin');
-var deactivatePin = function() {
-  for(i = 0; i < allPins.length; i++) {
+var deactivatePin = function () {
+  for (i = 0; i < allPins.length; i++) {
     allPins[i].classList.remove('pin--active');
-  } 
+  }
 };
 
-var onPinClick = function(evt) {
-  var originalDialogPanel =  body.querySelector('.dialog__panel');//Search update Node for replaceChild() on 118 15. 
+var onPinClick = function (evt) {
+  var originalDialogPanel = body.querySelector('.dialog__panel');// Search update Node for replaceChild() on 118 15.
   deactivatePin();
   openDialogPanel();
-  evt.currentTarget.classList.add('pin--active'); 
+  evt.currentTarget.classList.add('pin--active');
   for (i = 0; i < allPins.length; i++) {
-    if(evt.currentTarget === allPins[i]) {
+    if (evt.currentTarget === allPins[i]) {
       var activePin = i - 1;
     }
-  }; 
-  dialogPanelTemplateGen.appendChild(renderDialogPanel(adverts[activePin])); 
-  offerDialog.replaceChild(dialogPanelTemplateGen, originalDialogPanel); 
+  }
+  dialogPanelTemplateGen.appendChild(renderDialogPanel(adverts[activePin]));
+  offerDialog.replaceChild(dialogPanelTemplateGen, originalDialogPanel);
 };
 
-var onEscPress = function(evt) {
-  if(evt.keyCode == 27) {
+var onEscPress = function (evt) {
+  if (evt.keyCode === 27) {
     closeDialogPanel();
   }
 };
-var onEnterPress = function(evt) {
-  if(evt.keyCode == 13) {
+var onEnterPress = function (evt) {
+  if (evt.keyCode === 13) {
     onPinClick(evt);
   }
 };
-var closeDialogPanel = function(evt) {
-  offerDialog.style.display ='none';
+var closeDialogPanel = function (evt) {
+  offerDialog.style.display = 'none';
   deactivatePin();
-  document.removeEventListener('keydown',onEscPress);
+  document.removeEventListener('keydown', onEscPress);
 };
-var openDialogPanel = function(evt) {
-  offerDialog.style.display ='block'; 
-  document.addEventListener('keydown',onEscPress);
+var openDialogPanel = function (evt) {
+  offerDialog.style.display = 'block';
+  document.addEventListener('keydown', onEscPress);
 };
 var dialogClose = dialogTitle.querySelector('.dialog__close');
 dialogClose.addEventListener('click', closeDialogPanel);
 for (i = 1; i < allPins.length; i++) {
-  allPins[i].addEventListener('click', onPinClick)
-};
+  allPins[i].addEventListener('click', onPinClick);
+}
 for (i = 1; i < allPins.length; i++) {
-  allPins[i].addEventListener('keydown', onEnterPress)
-};
+  allPins[i].addEventListener('keydown', onEnterPress);
+}
 
 
