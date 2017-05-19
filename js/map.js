@@ -146,4 +146,15 @@ for (i = 1; i < allPins.length; i++) {
   allPins[i].addEventListener('keydown', onEnterPress);
 }
 
-
+var notice = document.forms;
+var checkIn = document.getElementById('time');
+var checkOut = document.getElementById('timeout');
+var sameTime = function() {
+  for(i=0; i < checkIn.children.length; i++) {
+    checkIn.children[i].setAttribute('value', i);
+  }
+  for(i=0; i < checkOut.children.length; i++) {
+    checkOut.children[i].setAttribute('value', i);
+  }
+}
+sameTime();
