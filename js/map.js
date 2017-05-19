@@ -1,17 +1,17 @@
-'use strict';
+'use strict'; 
 var body = document.body;
 var titles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
 var typeOfHouse = ['flat', 'house', 'bungalo'];
 var featuresArr = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var checkTime = ['12:00', '13.00', '14.00'];
-var map = document.body.querySelector('.tokyo__pin-map');
+var map = body.querySelector('.tokyo__pin-map');
 var dialogPanelTemplate = document.getElementById('lodge-template').content;
 var originalDialogPanel = body.querySelector('.dialog__panel');
 var offerDialog = originalDialogPanel.parentNode;
 var dialogTitle = body.querySelector('.dialog__title');
 var avatarImg = dialogTitle.querySelector('img');
 var random = function (min, max) {
-  return Math.round(Math.random() * (max - min) + (min));
+  return Math.floor(Math.random() * (max - min) + (min));
 };
 
 
@@ -19,12 +19,15 @@ var adverts = [];
 var genElement = function (n) {
   var x = random(300, 900);
   var y = random(100, 500);
+
   var randomFeaturesLength = function () {
-    var featuresArrcopy = featuresArr.slice();
+    var featuresArrcopy = featuresArr.slice(random(0, featuresArr.length), random(0, featuresArr.length));
+    /*
     var counter = random(0, featuresArrcopy.length);
     for (; counter > 0; counter--) {
       featuresArrcopy.splice(random(0, featuresArrcopy.length - 1), 1);
     }
+    */
     return featuresArrcopy;
   };
   var advertElement = {
@@ -41,7 +44,7 @@ var genElement = function (n) {
         'bungalo': 'Бунгало'
       },
       'rooms': random(1, 5),
-      'guests': random(1, 10),
+      'guests': random(1, 3),
       'checkin': checkTime[random(0, checkTime.length - 1)],
       'checkout': checkTime[random(0, checkTime.length - 1)],
       'features': randomFeaturesLength(),
@@ -145,5 +148,75 @@ for (i = 1; i < allPins.length; i++) {
 for (i = 1; i < allPins.length; i++) {
   allPins[i].addEventListener('keydown', onEnterPress);
 }
+var form = document.forms[1]; 
+var checkIn = form.querySelector('#time');
+var checkOut = form.querySelector('#timeout');
 
+var setOptionValueNumber = function(select) {
+  for (i = 0; i < select.children.length; i++) {
+    select.children[i].setAttribute("value", i)
+  }
+}
+setOptionValueNumber(checkIn);
+setOptionValueNumber(checkOut);
 
+var setSameOption = function (transmit, resive) { 
+  for (i = 0; i < transmit.options.length; i++) {
+    var transmitOption = transmit.options[i];
+    if(transmitOption.selected) {
+      var optionSelected = transmitOption.getAttribute('value');
+    }
+  }
+  for (i = 0; i < resive.options.length; i++) {
+    var resiveOption = resive.options[i];
+    if(resiveOption.value == optionSelected) {
+      resive.value = i;
+    }
+  }
+};
+checkIn.addEventListener('change', setSameOption.bind(null, checkIn,checkOut));
+checkOut.addEventListener('change', setSameOption.bind(null, checkOut,checkIn));
+
+var typeOfHouseFiled = document.getElementById('type');
+var priceField = document.getElementById('price');
+setOptionValueNumber(typeOfHouseFiled);
+var setTypeOfHouse = function() {
+  if(priceField.value < 1000) {
+    typeOfHouseFiled.value = 1;
+  } else if (priceField.value < 10000) {
+     typeOfHouseFiled.value = 0;
+  }
+    else {
+      typeOfHouseFiled.value = 2;
+    }
+};
+priceField.addEventListener('input', setTypeOfHouse);
+var roomNumberField = document.getElementById('room_number');
+var capacityField = document.getElementById('capacity');
+setOptionValueNumber(capacityField);
+setOptionValueNumber(roomNumberField);
+var setCapacity = function() {
+  for(i=0; i < roomNumberField.children.length; i++) {
+    var roomNumber = roomNumberField.options[i];
+    if(roomNumber.selected) {
+      var selectedRoom = roomNumber.getAttribute('value')
+    }
+    if(selectedRoom == 0) {
+      capacityField.value = 1;
+    }
+    else {
+      capacityField.value = 0;
+    }
+  }
+}
+roomNumberField.addEventListener('change', setCapacity);
+var submit = form.querySelector('.form__submit');
+var inputsInForm = form.querySelectorAll('input');
+submit.addEventListener('click', function(e) {
+    for (i = 0; i < inputsInForm.length ; i++) {
+      var input = inputsInForm[i];
+      if(input.checkValidity() == false) { 
+         input.style.border ="1px solid red";
+      }
+    };
+  });
